@@ -1,0 +1,26 @@
+name = "leak-fence"
+main = "crates/worker/build/worker/shim.mjs"
+compatibility_date = "2026-10-08"
+workers_dev = false
+preview_urls = false
+
+[build]
+command = "npm run build"
+
+[vars]
+SERVICE_ENABLED = "false"
+POLICIES_JSON = "[]"
+
+[limits]
+cpu_ms = 100
+
+[[durable_objects.bindings]]
+name = "BUDGETS"
+class_name = "DisclosureBudget"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["DisclosureBudget"]
+
+[observability]
+enabled = false

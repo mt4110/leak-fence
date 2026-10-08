@@ -1,0 +1,14 @@
+[
+  {
+    "id": "sample.customers",
+    "budget_group": "customer-read",
+    "permission": "customer:read",
+    "fields": ["id", "tenant_id", "name"],
+    "tenant_field": "tenant_id",
+    "id_field": "id",
+    "max_records": 10,
+    "max_bytes": 16384,
+    "daily_records": 50,
+    "daily_bytes": 262144
+  }
+]

@@ -1,0 +1,41 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '26.9.0'
+          cache: npm
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Toolchain
+        run: rustup toolchain install 1.95.0 --profile minimal --component rustfmt --component clippy --target wasm32-unknown-unknown
+      - name: Rust checks
+        run: |
+          cargo fmt --all --check
+          cargo test --locked -p leak-fence-core
+          cargo clippy --locked -p leak-fence-core --all-targets -- -D warnings
+          cargo clippy --locked -p leak-fence-worker --target wasm32-unknown-unknown -- -D warnings
+      - name: Install local tooling
+        run: |
+          npm ci --ignore-scripts
+          cargo install worker-build --version 0.8.7 --locked
+      - name: Integration and dependency checks
+        run: |
+          npm audit --audit-level=high
+          npm run check:adapter
+          npm run build
+          npm run test:worker
+          python -B -m unittest discover -s tests -p 'test_*.py' -v

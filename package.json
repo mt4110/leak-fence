@@ -1,0 +1,19 @@
+{
+  "name": "leak-fence-tooling",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test:worker": "node --test --test-concurrency=1 tests/worker.test.mjs",
+    "check:adapter": "tsc --noEmit --strict --target ES2022 --module nodenext --lib ES2022,DOM packages/adapter/index.ts",
+    "demo": "node scripts/demo.mjs"
+  },
+  "overrides": {
+    "sharp": "0.35.5"
+  },
+  "devDependencies": {
+    "miniflare": "5.20261001.0-alpha",
+    "typescript": "7.0.2",
+    "wrangler": "4.147.0"
+  }
+}

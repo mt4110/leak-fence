@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/mt4110/leak-fence/security/advisories/new
+    about: Please use synthetic reproductions. Do not put customer data or credentials in public issues.
