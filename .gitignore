@@ -2,6 +2,7 @@
 **/build/
 /node_modules/
 /.local/
+/examples/zt-gateway/.local/
 /.wrangler/
 .env
 .env.*
