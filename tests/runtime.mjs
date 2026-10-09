@@ -11,7 +11,11 @@ export function newState() {
 export function runtime({ state = newState(), policies = contracts, enabled = 'true', budgets = true } = {}) {
   return new Miniflare(convertV4MiniflareOptions({
     resourcePersistencePath: state,
-    workers: [{
+    workers: [guardWorker({ policies, enabled, budgets })],
+  }));
+}
+export function guardWorker({ policies = contracts, enabled = 'true', budgets = true } = {}) {
+  return {
       name: 'leak-fence',
       modules: [
         { type: 'ESModule', path: 'crates/worker/build/index.js' },
@@ -20,8 +24,7 @@ export function runtime({ state = newState(), policies = contracts, enabled = 't
       compatibilityDate: '2026-10-08',
       bindings: { SERVICE_ENABLED: enabled, POLICIES_JSON: JSON.stringify(policies) },
       durableObjects: budgets ? { BUDGETS: { className: 'DisclosureBudget', useSQLite: true } } : {},
-    }],
-  }));
+    };
 }
 export function disclosure({ principal = 'alice', tenant = 'acme', body, contract = 'sample.customers' } = {}) {
   return {

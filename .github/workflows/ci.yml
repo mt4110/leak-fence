@@ -38,4 +38,5 @@ jobs:
           npm run check:adapter
           npm run build
           npm run test:worker
+          npm run test:staging
           python -B -m unittest discover -s tests -p 'test_*.py' -v
