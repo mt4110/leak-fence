@@ -1,0 +1,15 @@
+[package]
+name = "leak-fence-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "leak-fence"
+path = "src/main.rs"
+
+[dependencies]
+leak-fence-core = { path = "../core" }
+serde_json.workspace = true

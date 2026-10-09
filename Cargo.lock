@@ -276,6 +276,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "leak-fence-cli"
+version = "0.1.0"
+dependencies = [
+ "leak-fence-core",
+ "serde_json",
+]
+
+[[package]]
 name = "leak-fence-core"
 version = "0.1.0"
 dependencies = [

@@ -26,7 +26,9 @@ jobs:
         run: |
           cargo fmt --all --check
           cargo test --locked -p leak-fence-core
+          cargo test --locked -p leak-fence-cli
           cargo clippy --locked -p leak-fence-core --all-targets -- -D warnings
+          cargo clippy --locked -p leak-fence-cli --all-targets -- -D warnings
           cargo clippy --locked -p leak-fence-worker --target wasm32-unknown-unknown -- -D warnings
       - name: Install local tooling
         run: |
@@ -38,5 +40,6 @@ jobs:
           npm run check:adapter
           npm run build
           npm run test:worker
+          npm run test:adapter
           npm run test:staging
           python -B -m unittest discover -s tests -p 'test_*.py' -v
