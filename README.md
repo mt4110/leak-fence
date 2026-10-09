@@ -1,6 +1,6 @@
 # LeakFence
 
-**APIが返すデータを、権限と取得量の契約で制限するOSS。**
+**APIが他人のレコード・許可していない項目・取得枠を超えるデータを返す前に止めるOSS。**
 
 Rust / Cloudflare Workers / SQLite-backed Durable Objects / MIT。
 現在は開発中の検証用プロトタイプです。独立監査・本番相当の負荷試験は未実施です。
@@ -13,8 +13,24 @@ Rust / Cloudflare Workers / SQLite-backed Durable Objects / MIT。
 
 ## 最初に試す
 
-Rust 1.95.0とwasm32-unknown-unknown、Node.js 26.9.0、Python 3.12以上を使用します。
-Rustの対象はrust-toolchain.tomlに記載しています。
+### 1コマンドで内容検査を体験
+
+リポジトリを取得し、Rust/rustupが入った環境で、ルートから実行してください。
+固定するRust 1.95.0と必要な対象・コンポーネントはrust-toolchain.tomlに記載しています。
+初回のビルド時はツールチェーン・依存の取得が発生します。
+
+```sh
+cargo run --locked -p leak-fence-cli -- demo
+```
+
+許可された合成応答は通し、他テナントと追加の秘密項目は拒否します。
+CLIはWorkerと同じRustの検査コードを使用します。Cloudflareアカウント、Node.js、Pythonは不要です。
+入力本文を外部送信・保存・ログ出力しません。**CLIは内容検査だけで、日次取得枠を確認・消費せず、APIの通信も遮断しません。**
+実際の防御には後述のAPI接続が必要です。[自分の設定・合成応答を検査する方法](docs/QUICKSTART.md)も用意しています。
+
+### 日次取得枠までローカルで体験
+
+Rustに加え、Node.js 26.9.0とworker-build 0.8.7を使用します。
 
 ```sh
 cargo install worker-build --version 0.8.7 --locked
@@ -23,7 +39,9 @@ npm run build
 npm run demo
 ```
 
-合成データだけで、他テナントの応答拒否、許可された応答、取得枠超過を確認します。
+実際のRust/Wasm WorkerとローカルSQLite-backed Durable Objectを使い、
+他テナント・未許可ID・追加項目の拒否、正常取得、日次取得枠超過を合成データで確認します。
+期待した許可・拒否と異なればデモは失敗終了します。
 Cloudflareアカウント、デプロイ、実データは不要です。
 ローカル試験の状態は.local/worker-test-*に残ります。
 
@@ -59,8 +77,16 @@ Cloudflareアカウント、デプロイ、実データは不要です。
                                 検査済み応答 または拒否
 ```
 
-[契約の例](examples/contracts.json)と[TypeScript接続関数](packages/adapter/index.ts)を同梱しています。
-Rust側はcrates/workerを参照してください。初期版の接続関数はnpmに公開していません。
+[契約の例](examples/contracts.json)、[TypeScript接続関数](packages/adapter/index.ts)、
+[一つのGETルートへ接続する例](examples/integration/customer-api.ts)を同梱しています。
+まず[導入ガイド](docs/QUICKSTART.md)に沿って、既存の認証・認可と読み取り処理の二つを接続してください。
+初期版の接続関数はnpmに公開していません。Rust側はcrates/workerを参照してください。
+
+`createProtectedHandler`は、認可が成功した後だけデータを読み取り、固定した認可結果でガードを呼びます。
+未認証401・権限なし403・非GET405では読み取り処理を呼ばず、設定や接続・読み取りの失敗は503です。
+戻り値のResponseをそのまま返してください。認可ルールの正しさや、他のルートへの適用漏れは自動で判定しません。
+
+既存コードへ低水準の`protectJson`を直接組み込む場合は次の形です。
 
 ```ts
 // 自分のサーバーのルート内で使用する形。authzは既存の認可処理の結果。
@@ -113,15 +139,20 @@ GitHubのCIから本番へデプロイする機能はありません。
 ```sh
 cargo fmt --all --check
 cargo test --locked -p leak-fence-core
+cargo test --locked -p leak-fence-cli
 cargo clippy --locked -p leak-fence-core --all-targets -- -D warnings
+cargo clippy --locked -p leak-fence-cli --all-targets -- -D warnings
 cargo clippy --locked -p leak-fence-worker --target wasm32-unknown-unknown -- -D warnings
 npm run check:adapter
 npm run build
 npm run test:worker
+npm run test:adapter
 npm run test:staging
 npm audit --audit-level=high
 python3 -B -m unittest discover -s tests -p 'test_*.py' -v
 ```
+
+Python 3.12以上は保全した試作とSQLiteの開発用回帰試験に使用します。Rust版の利用には不要です。
 
 ローカルworkerdで、並行要求、再起動後の枠維持、共有枠、UTF-8バイト数、設定・binding障害を検証します。
 Rustの単体試験、SQLiteの境界試験、既存Python試作の回帰試験は別々に扱います。
@@ -130,9 +161,11 @@ Rustの単体試験、SQLiteの境界試験、既存Python試作の回帰試験�
 ## 構成
 
 - crates/core: Rustの返却契約検査と取得枠SQL
+- crates/cli: 外部送信しない設定・応答検査と合成デモ
 - crates/worker: 非公開WorkerとDurable Object
 - packages/adapter: TypeScript側の接続関数
 - tests: ローカルworkerd・SQLite・Python試験
 - leakfence: 保全したPython試作。[元の説明](docs/PYTHON_PROTOTYPE.md)はRust版の仕様とは異なります
 
 脆弱性の報告は[Security Policy](SECURITY.md)を参照してください。実データや認証情報をIssueへ貼らないでください。
+本番利用の判断材料と未完了の項目は[実用化の条件](docs/READINESS.md)に記載しています。

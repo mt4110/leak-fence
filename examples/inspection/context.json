@@ -1,0 +1,6 @@
+{
+  "principal": "synthetic-reader",
+  "tenant": "synthetic-acme",
+  "permission": "customer:read",
+  "record_ids": ["1"]
+}
