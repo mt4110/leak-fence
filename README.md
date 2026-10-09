@@ -3,7 +3,8 @@
 **APIが返すデータを、権限と取得量の契約で制限するOSS。**
 
 Rust / Cloudflare Workers / SQLite-backed Durable Objects / MIT。
-現在は開発中の検証用プロトタイプです。独立監査・Cloudflare実環境の負荷試験は未実施です。
+現在は開発中の検証用プロトタイプです。独立監査・本番相当の負荷試験は未実施です。
+合成データによる[実Cloudflare接続と限定的な並行試験](docs/STAGING_RESULTS_2026-10-09.md)を実施しています。
 
 既存の認証・認可結果を使って、送信直前のJSONレコードを検査します。
 別テナントの行、許可していないID・項目、日次の取得枠を超える応答を停止します。
@@ -25,6 +26,10 @@ npm run demo
 合成データだけで、他テナントの応答拒否、許可された応答、取得枠超過を確認します。
 Cloudflareアカウント、デプロイ、実データは不要です。
 ローカル試験の状態は.local/worker-test-*に残ります。
+
+認証済みAPIからの接続を試す場合は[検証環境の計画](docs/STAGING_VALIDATION.md)を参照してください。
+専用の合成API、ローカルService Binding試験、回数を限定したクラウド試験手順を用意しています。
+既存製品への導入実績や販売需要の証明とは別に扱います。
 
 ## 守る対象
 
@@ -90,6 +95,8 @@ HTTPストリームの中継ではありません。既存の応答をバッフ�
 wrangler.tomlはSERVICE_ENABLED=false、workers.dev無効、preview URL無効、公開ルートなしです。
 稼働設定と接続経路は[導入・停止・復旧手順](docs/OPERATIONS.md)を参照してください。
 GitHubのCIから本番へデプロイする機能はありません。
+日次の取得枠とCloudflareの請求予算は別です。予算通知は請求額を強制停止しません。
+月額予算の扱いと、自分のアカウントへの導入手順も[運用手順](docs/OPERATIONS.md)に記載しています。
 
 ## 防げないもの
 
@@ -111,6 +118,7 @@ cargo clippy --locked -p leak-fence-worker --target wasm32-unknown-unknown -- -D
 npm run check:adapter
 npm run build
 npm run test:worker
+npm run test:staging
 npm audit --audit-level=high
 python3 -B -m unittest discover -s tests -p 'test_*.py' -v
 ```

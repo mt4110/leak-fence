@@ -1,0 +1,15 @@
+name = "leak-fence-validation-api"
+main = "api.ts"
+compatibility_date = "2026-10-08"
+workers_dev = false
+preview_urls = false
+
+[limits]
+cpu_ms = 100
+
+[[services]]
+binding = "LEAK_FENCE"
+service = "leak-fence-validation-guard"
+
+[observability]
+enabled = false

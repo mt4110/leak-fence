@@ -6,7 +6,9 @@
     "build": "node scripts/build.mjs",
     "test:worker": "node --test --test-concurrency=1 tests/worker.test.mjs",
     "check:adapter": "tsc --noEmit --strict --target ES2022 --module nodenext --lib ES2022,DOM packages/adapter/index.ts",
-    "demo": "node scripts/demo.mjs"
+    "demo": "node scripts/demo.mjs",
+    "build:staging": "tsc --strict --target ES2022 --module nodenext --lib ES2022,DOM --outDir .local/staging-js examples/staging/api.ts",
+    "test:staging": "npm run build:staging && node --test --test-concurrency=1 tests/staging.test.mjs"
   },
   "overrides": {
     "sharp": "0.35.5"
