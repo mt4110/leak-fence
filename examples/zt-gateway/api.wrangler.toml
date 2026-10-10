@@ -1,0 +1,19 @@
+name = "leak-fence-zt-validation-api"
+main = "api.ts"
+compatibility_date = "2026-10-08"
+workers_dev = false
+preview_urls = false
+
+# ORIGIN_BASE_URL: dedicated HTTPS summary-only origin (no path/query/credentials).
+# Supply ORIGIN_EDGE_SECRET, AUTHORITY_KEY and VALIDATION_EXPIRES_AT as secrets.
+# ALLOW_LOCAL_ORIGIN is exclusively for the local test harness.
+
+[[services]]
+binding = "LEAK_FENCE"
+service = "leak-fence-zt-validation-guard"
+
+[limits]
+cpu_ms = 100
+
+[observability]
+enabled = false

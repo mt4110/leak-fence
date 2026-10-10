@@ -1,0 +1,14 @@
+[
+  {
+    "id": "zt.verification-summary",
+    "budget_group": "zt-verification-summary",
+    "permission": "verification-event-summary:read",
+    "fields": ["schema_version", "ingest_id", "tenant_id", "kind", "received_at", "reported_result", "reported_policy_decision", "event_signature_verified"],
+    "tenant_field": "tenant_id",
+    "id_field": "ingest_id",
+    "max_records": 1,
+    "max_bytes": 4096,
+    "daily_records": 30,
+    "daily_bytes": 122880
+  }
+]

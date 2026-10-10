@@ -7,10 +7,13 @@
     "test:worker": "node --test --test-concurrency=1 tests/worker.test.mjs",
     "check:adapter": "tsc --noEmit --strict --target ES2022 --module nodenext --lib ES2022,DOM packages/adapter/index.ts examples/integration/customer-api.ts",
     "build:adapter": "tsc --strict --target ES2022 --module nodenext --lib ES2022,DOM --rootDir . --outDir .local/adapter-js packages/adapter/index.ts examples/integration/customer-api.ts tests/fixtures/protected-api.ts",
-    "test:adapter": "npm run build:adapter && node --test --test-concurrency=1 tests/adapter.test.mjs",
+    "test:adapter": "npm run build:adapter && npm run build:zt && node --test --test-concurrency=1 tests/adapter.test.mjs tests/zt-gateway.test.mjs",
     "demo": "node scripts/demo.mjs",
     "build:staging": "tsc --strict --target ES2022 --module nodenext --lib ES2022,DOM --outDir .local/staging-js examples/staging/api.ts",
-    "test:staging": "npm run build:staging && node --test --test-concurrency=1 tests/staging.test.mjs"
+    "test:staging": "npm run build:staging && node --test --test-concurrency=1 tests/staging.test.mjs",
+    "build:zt": "tsc --strict --target ES2022 --module nodenext --lib ES2022,DOM --rootDir . --outDir .local/zt-js examples/zt-gateway/api.ts",
+    "test:zt": "npm run build:zt && node --test --test-concurrency=1 tests/zt-gateway.test.mjs",
+    "validate:zt": "npm run build:zt && node scripts/zt-gateway-validation.mjs"
   },
   "overrides": {
     "sharp": "0.35.5"

@@ -6,6 +6,8 @@ Rust / Cloudflare Workers / SQLite-backed Durable Objects / MIT。
 現在は開発中の検証用プロトタイプです。独立監査・本番相当の負荷試験は未実施です。
 合成データによる[実Cloudflare接続と限定的な並行試験](docs/STAGING_RESULTS_2026-10-09.md)を実施しています。
 
+GoのZT Gatewayにある認証付き要約API向けの[接続手順と検証ハーネス](docs/ZT_GATEWAY_INTEGRATION.md)も用意しています。
+
 既存の認証・認可結果を使って、送信直前のJSONレコードを検査します。
 別テナントの行、許可していないID・項目、日次の取得枠を超える応答を停止します。
 検査・ストレージ・タイムアウトの失敗時に、元のデータを返すフォールバックはありません。
