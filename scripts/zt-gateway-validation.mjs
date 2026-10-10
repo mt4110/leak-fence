@@ -38,6 +38,7 @@ let cloudRequests = 0;
 let apiName = 'leak-fence-zt-' + suffix + '-api';
 let guardName = 'leak-fence-zt-' + suffix + '-guard';
 let priorCloudRequests = 0;
+let previousBudgetDay;
 if (cloud && process.env.RESUME_CLOUD_STATE) {
   const previous = resolve(process.env.RESUME_CLOUD_STATE);
   const closed = JSON.parse(readFileSync(resolve(previous, 'shutdown.json'), 'utf8'));
@@ -47,12 +48,16 @@ if (cloud && process.env.RESUME_CLOUD_STATE) {
   guardName = apiName.replace(/-api$/, '-guard');
   priorCloudRequests = closed.cloud_http_requests;
   assert.ok(Number.isSafeInteger(priorCloudRequests) && priorCloudRequests >= 0 && priorCloudRequests < 300);
+  const previousAttempt = JSON.parse(readFileSync(resolve(previous, 'attempt.json'), 'utf8'));
+  previousBudgetDay = new Date(previousAttempt.started_at).toISOString().slice(0, 10);
 }
 let requests = 0, originRequests = 0;
 let fault = 'normal';
 let savedProof = '';
 const cases = [];
 const started = new Date().toISOString();
+const budgetDay = started.slice(0, 10);
+if (auditResume) assert.equal(previousBudgetDay, budgetDay, 'remaining-17 audit requires the same UTC budget day');
 
 async function command(program, args, options = {}) {
   return await new Promise((resolveResult, reject) => {
@@ -265,21 +270,31 @@ try {
     const guarded = await check('paired normal read', source.ids[0], source.tokens[0], 200);
     protectedTimes.push(performance.now() - start);
     assert.equal(guarded.body, rawBody, 'normal body must be preserved exactly');
+    appendFileSync(resolve(dir, 'timing.jsonl'), JSON.stringify({ pair: i + 1,
+      baseline_ms: baseline.at(-1), protected_ms: protectedTimes.at(-1) }) + '\n', { mode: 0o600 });
   }
+  assert.equal(new Date().toISOString().slice(0, 10), budgetDay, 'UTC budget day changed before concurrency; reassess remaining quota');
   const concurrent = await Promise.all(Array.from({ length: 35 }, async () => {
     if (++requests > 300) throw new Error('validation request ceiling');
     const start = performance.now();
-    const response = await call(source.ids[0], source.tokens[0]);
-    return { ...response, elapsed_ms: performance.now() - start };
+    try {
+      const response = await call(source.ids[0], source.tokens[0]);
+      return { ...response, elapsed_ms: performance.now() - start };
+    } catch {
+      // Preserve the whole cohort even if a request has no complete response.
+      // Do not infer an HTTP status or body safety for a transport failure.
+      return { status: null, body: '', headers: new Headers(), transport_error: true,
+        elapsed_ms: performance.now() - start };
+    }
   }));
   const remaining = auditResume ? 17 : 18; // B previously consumed one record; preserve it.
   const concurrencyEvidence = concurrent.map((r, index) => {
     let error;
     try { const parsed = JSON.parse(r.body); if (Object.keys(parsed).length === 1 && typeof parsed.error === 'string') error = parsed.error; } catch {}
-    return { index, status: r.status, elapsed_ms: r.elapsed_ms, error,
-      source_markers_absent: !r.body.includes('synthetic-zt-') && !r.body.includes('SYNTHETIC_PRIVATE') && !r.body.includes('reported_result'),
-      authority_header_absent: r.headers.get('X-ZT-Read-Authority') === null,
-      body_sha256: createHash('sha256').update(r.body).digest('hex') };
+    return { index, status: r.status, elapsed_ms: r.elapsed_ms, error, transport_error: r.transport_error ?? false,
+      source_markers_absent: r.transport_error ? null : !r.body.includes('synthetic-zt-') && !r.body.includes('SYNTHETIC_PRIVATE') && !r.body.includes('reported_result'),
+      authority_header_absent: r.transport_error ? null : r.headers.get('X-ZT-Read-Authority') === null,
+      body_sha256: r.transport_error ? null : createHash('sha256').update(r.body).digest('hex') };
   });
   // Persist before asserting, so an unexpected response never erases the rest
   // of the cohort. Cloud network failures may safely return 503; they are
@@ -302,7 +317,10 @@ try {
   if (!cloud) { assert.equal(allowed, remaining); assert.equal(denied, 35 - remaining); }
   cases.push({ name: `remaining ${remaining} records, 35 concurrent requests`, allowed, denied, unavailable, actual: 'bounded and every refusal checked' });
   appendFileSync(resolve(dir, 'steps.jsonl'), JSON.stringify(cases.at(-1)) + '\n', { mode: 0o600 });
-  await check(auditResume ? 'previously exhausted tenant A budget remains exhausted' : syntheticSubject ? 'previously exhausted tenant B budget remains exhausted' : 'tenant B has independent budget', source.ids[1], source.tokens[1], auditResume || syntheticSubject ? 429 : 200);
+  assert.equal(new Date().toISOString().slice(0, 10), budgetDay, 'UTC budget day changed during the trial; reassess remaining quota');
+  const preservedExhaustion = (auditResume || syntheticSubject) && previousBudgetDay === budgetDay;
+  await check(preservedExhaustion ? `previously exhausted tenant ${auditResume ? 'A' : 'B'} budget remains exhausted` : previousBudgetDay ? 'existing tenant budget is available on the new UTC day' : 'tenant B has independent budget',
+    source.ids[1], source.tokens[1], preservedExhaustion ? 429 : 200);
   if (cloud) {
     await wrangler(['deploy', '--config', resolve(dir, 'guard.closed.wrangler.toml')]);
     await pause(15000);
@@ -322,6 +340,7 @@ try {
   const report = { started_at: started, completed_at: new Date().toISOString(), environment: cloud ? 'real Cloudflare Workers + Quick Tunnel + local Go + PostgreSQL 16' : 'local Go + real PostgreSQL 16 + workerd + Rust/Wasm + SQLite DO',
     cloud_deployed: cloud, production_data: false, client_requests: requests, cloud_http_requests: cloudRequests,
     prior_cloud_http_requests: priorCloudRequests, cumulative_cloud_http_requests: priorCloudRequests + cloudRequests,
+    budget_day_utc: budgetDay, ...(previousBudgetDay ? { previous_budget_day_utc: previousBudgetDay } : {}),
     ...(syntheticSubject ? { additional_synthetic_subject: syntheticSubject, previous_budgets_retained: true } : {}),
     ...(auditResume ? { guard_stop_evidence: process.env.FINALIZATION_STATE, previous_tenant_b_records: 1, quota_reset: false } : {}),
     origin_http_requests_observed_by_harness: originRequests, cloud_worker_origin_fetch_count: cloud ? 'not measured' : 'included above', ingest_handler_invocations: 2,

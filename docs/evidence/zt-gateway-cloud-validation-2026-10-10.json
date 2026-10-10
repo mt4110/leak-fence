@@ -1,0 +1,605 @@
+{
+  "scope": "Owner pilot using real ZT Gateway handlers and PostgreSQL, synthetic records and SSO, real Cloudflare Workers/Rust/Wasm/SQLite DO. Not production or independent adoption.",
+  "trial_started_at_utc": "2026-10-10T00:29:00.431Z",
+  "trial_completed_at_utc": "2026-10-10T00:29:49.866Z",
+  "budget": {
+    "daily_records": 30,
+    "normal_reads_before_concurrency": 12,
+    "remaining_records": 18,
+    "manual_reset": false,
+    "additional_synthetic_sso_users": 1,
+    "previous_budget_day_utc": "2026-10-09",
+    "current_budget_day_utc": "2026-10-10"
+  },
+  "concurrency": {
+    "requests": 35,
+    "allowed": 18,
+    "budget_refusals": 17,
+    "unavailable": 0,
+    "transport_errors": 0,
+    "responses": [
+      {
+        "index": 0,
+        "status": 200,
+        "elapsed_ms": 69.86095799999748,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 1,
+        "status": 200,
+        "elapsed_ms": 86.3357079999987,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 2,
+        "status": 200,
+        "elapsed_ms": 195.85854200000176,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 3,
+        "status": 200,
+        "elapsed_ms": 193.5848330000008,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 4,
+        "status": 429,
+        "elapsed_ms": 190.1049579999999,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 5,
+        "status": 429,
+        "elapsed_ms": 199.66949999999997,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 6,
+        "status": 429,
+        "elapsed_ms": 187.67683300000135,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 7,
+        "status": 200,
+        "elapsed_ms": 154.0550000000003,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 8,
+        "status": 429,
+        "elapsed_ms": 189.16808400000082,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 9,
+        "status": 429,
+        "elapsed_ms": 216.6571249999979,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 10,
+        "status": 200,
+        "elapsed_ms": 153.16429100000096,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 11,
+        "status": 200,
+        "elapsed_ms": 102.06787500000064,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 12,
+        "status": 429,
+        "elapsed_ms": 214.99158300000272,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 13,
+        "status": 200,
+        "elapsed_ms": 151.9320829999997,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 14,
+        "status": 429,
+        "elapsed_ms": 185.6028750000005,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 15,
+        "status": 429,
+        "elapsed_ms": 185.6337080000012,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 16,
+        "status": 429,
+        "elapsed_ms": 184.22366700000202,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 17,
+        "status": 429,
+        "elapsed_ms": 191.96933300000092,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 18,
+        "status": 429,
+        "elapsed_ms": 182.0607080000009,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 19,
+        "status": 200,
+        "elapsed_ms": 146.67483400000128,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 20,
+        "status": 200,
+        "elapsed_ms": 183.32187500000146,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 21,
+        "status": 200,
+        "elapsed_ms": 147.61929099999907,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 22,
+        "status": 429,
+        "elapsed_ms": 180.60820800000147,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 23,
+        "status": 429,
+        "elapsed_ms": 183.53383400000166,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 24,
+        "status": 200,
+        "elapsed_ms": 144.84083300000202,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 25,
+        "status": 200,
+        "elapsed_ms": 141.58287500000006,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 26,
+        "status": 429,
+        "elapsed_ms": 208.1471670000028,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 27,
+        "status": 429,
+        "elapsed_ms": 188.44945799999914,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 28,
+        "status": 200,
+        "elapsed_ms": 140.66820899999948,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 29,
+        "status": 200,
+        "elapsed_ms": 180.3080829999999,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 30,
+        "status": 200,
+        "elapsed_ms": 94.56433299999844,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 31,
+        "status": 429,
+        "elapsed_ms": 177.05854199999885,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      },
+      {
+        "index": 32,
+        "status": 200,
+        "elapsed_ms": 144.7100419999988,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 33,
+        "status": 200,
+        "elapsed_ms": 178.8562920000004,
+        "transport_error": false,
+        "source_markers_absent": false,
+        "authority_header_absent": true,
+        "body_sha256": "a9cb1a3d35d17078a26d8928aeb4335cb56beca691e19ea8d77f6c9aa6536835"
+      },
+      {
+        "index": 34,
+        "status": 429,
+        "elapsed_ms": 203.99433299999873,
+        "error": "disclosure_budget",
+        "transport_error": false,
+        "source_markers_absent": true,
+        "authority_header_absent": true,
+        "body_sha256": "3fd3e036e18fae39915f906d53473a404bb488257d8d06add03b8ff5905e7bc7"
+      }
+    ],
+    "marker_check_scope": "Source markers must be absent in refusals. Successful authorized responses contain their permitted summary fields."
+  },
+  "trial_completed_checks": [
+    {
+      "name": "public Worker authentication probe",
+      "expected": 401,
+      "actual": 401
+    },
+    {
+      "name": "same-tenant signed ingest to guarded read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "forged client authority ignored",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "missing JWT",
+      "expected": 401,
+      "actual": 401
+    },
+    {
+      "name": "invalid JWT",
+      "expected": 401,
+      "actual": 401
+    },
+    {
+      "name": "cross-tenant admin",
+      "expected": 404,
+      "actual": 404
+    },
+    {
+      "name": "missing ID",
+      "expected": 404,
+      "actual": 404
+    },
+    {
+      "name": "non-GET",
+      "expected": 405,
+      "actual": 405
+    },
+    {
+      "name": "injected source tenant",
+      "expected": 403,
+      "actual": 403
+    },
+    {
+      "name": "injected source id",
+      "expected": 403,
+      "actual": 403
+    },
+    {
+      "name": "injected source field",
+      "expected": 403,
+      "actual": 403
+    },
+    {
+      "name": "injected source nested",
+      "expected": 403,
+      "actual": 403
+    },
+    {
+      "name": "injected source missing-proof",
+      "expected": 503,
+      "actual": 503
+    },
+    {
+      "name": "injected source mac",
+      "expected": 503,
+      "actual": 503
+    },
+    {
+      "name": "injected source replay",
+      "expected": 503,
+      "actual": 503
+    },
+    {
+      "name": "injected source failure",
+      "expected": 503,
+      "actual": 503
+    },
+    {
+      "name": "origin denies other route",
+      "expected": 404,
+      "actual": 404
+    },
+    {
+      "name": "origin denies other route",
+      "expected": 404,
+      "actual": 404
+    },
+    {
+      "name": "origin denies other route",
+      "expected": 404,
+      "actual": 404
+    },
+    {
+      "name": "origin direct bypass denied",
+      "expected": 401,
+      "actual": 401
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "paired normal read",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "name": "remaining 18 records, 35 concurrent requests",
+      "allowed": 18,
+      "denied": 17,
+      "unavailable": 0,
+      "actual": "bounded and every refusal checked"
+    }
+  ],
+  "trial_stop": {
+    "failed_assertion": "previously exhausted tenant B budget remains exhausted",
+    "expected": 429,
+    "actual": 200,
+    "explanation": "The same tenant B identity has a new daily quota after UTC midnight (09:00 JST); this assertion used a stale day assumption. One current-day read was consumed.",
+    "new_day_200_body_check": "Saved failure excerpt is complete JSON; correct tenant B, persisted ID and exactly eight summary fields verified offline."
+  },
+  "guard_stop_checks": [
+    {
+      "name": "public Worker authentication probe",
+      "expected": 401,
+      "actual": 401
+    },
+    {
+      "name": "disabled real guard with tenant B remaining quota",
+      "expected": 503,
+      "actual": 503
+    }
+  ],
+  "shutdown": {
+    "api_closed_deploy": true,
+    "guard_disabled_deploy": true,
+    "entry_check_status": 404,
+    "cloud_http_requests": 247
+  },
+  "remote_settings_after_close": {
+    "checked_at_utc": "2026-10-10T00:31:58.948788+00:00",
+    "workers": {
+      "leak-fence-zt-7d6ea5f36e27-api": {
+        "enabled": false,
+        "previews_enabled": false
+      },
+      "leak-fence-zt-7d6ea5f36e27-guard": {
+        "enabled": false,
+        "previews_enabled": false
+      }
+    },
+    "guard_service_enabled": false
+  },
+  "explicit_cloud_http_requests": {
+    "previous_trials": 163,
+    "additional_trial": 78,
+    "stop_confirmation": 6,
+    "cumulative": 247,
+    "authorized_ceiling": 300,
+    "excludes": "Cloudflare management/deploy API calls and internal Worker/origin/guard/DO requests"
+  },
+  "timing": {
+    "scope": "One 35-request concurrent cohort; client full-body receipt via temporary tunnel and local Go/PostgreSQL, not a baseline comparison or product SLO",
+    "success_samples": 18,
+    "success_median_ms": 147.14706250000017,
+    "refusal_samples": 17,
+    "refusal_median_ms": 188.44945799999914,
+    "paired_baseline_latency": "not_saved"
+  },
+  "historical_unknowns": {
+    "previous_concurrency_responses_not_saved": 3,
+    "recovered": false
+  },
+  "billing_usage": "not_measured",
+  "artifact_hashes": [
+    {
+      "artifact": ".local/zt-validation-jsJWxa/attempt.json",
+      "sha256": "f53ca9de58189ef2cc881e844007ff99d31a1266c7bf0e341e068a2e066cffcf"
+    },
+    {
+      "artifact": ".local/zt-validation-jsJWxa/concurrent.json",
+      "sha256": "83bb8683a6d2c1a941c9ba0b7d08ba5934e4f183c4873a47443d50ec6a9591d0"
+    },
+    {
+      "artifact": ".local/zt-validation-jsJWxa/shutdown.json",
+      "sha256": "3d51198291e73ca500b812d26acd56d56d7976ce390bde0e2e7305b8fb97dd58"
+    },
+    {
+      "artifact": ".local/zt-validation-8L5Gwj/finalization.json",
+      "sha256": "caa93e6035e4492f186de4819586441d2a69edb901e66f9157e6973c1c355caf"
+    },
+    {
+      "artifact": ".local/zt-validation-8L5Gwj/shutdown.json",
+      "sha256": "14cf1ba40d645254a07acbe76403d47ce609751d013045f5c658736760af6a68"
+    },
+    {
+      "artifact": ".local/zt-validation-8L5Gwj/cloud-settings-after-close.json",
+      "sha256": "5b53ed9572b77aa593b6ec59863e3b1c5d3d377090633854b2f7871b3e593623"
+    },
+    {
+      "artifact": ".local/zt-validation-jsJWxa/failure.json",
+      "sha256": "b2450c9f6be21e57cb863e4dc265a62247f41e6ae2d18c6ca5c7cf9badfbf9b1"
+    }
+  ]
+}
