@@ -13,5 +13,5 @@ crate-type = ["cdylib", "rlib"]
 leak-fence-core = { path = "../core" }
 serde.workspace = true
 serde_json.workspace = true
-worker = "=0.8.7"
+worker = "=0.9.0"
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
