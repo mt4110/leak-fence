@@ -148,16 +148,14 @@ cargo clippy --locked -p leak-fence-worker --target wasm32-unknown-unknown -- -D
 npm run check:adapter
 npm run build
 npm run test:worker
+node --test tests/budget-sql.test.mjs
 npm run test:adapter
 npm run test:staging
 npm audit --audit-level=high
-python3 -B -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-Python 3.12以上は保全した試作とSQLiteの開発用回帰試験に使用します。Rust版の利用には不要です。
-
 ローカルworkerdで、並行要求、再起動後の枠維持、共有枠、UTF-8バイト数、設定・binding障害を検証します。
-Rustの単体試験、SQLiteの境界試験、既存Python試作の回帰試験は別々に扱います。
+SQLiteの境界試験では、Rust側のSQLをNode.js組み込みのSQLiteで実行し、日付の切り替わりと時計の巻き戻しを確認します。
 実クラウドの地域間動作・本番負荷・第三者の導入効果の確認を代替しません。
 
 ## 構成
@@ -166,8 +164,8 @@ Rustの単体試験、SQLiteの境界試験、既存Python試作の回帰試験�
 - crates/cli: 外部送信しない設定・応答検査と合成デモ
 - crates/worker: 非公開WorkerとDurable Object
 - packages/adapter: TypeScript側の接続関数
-- tests: ローカルworkerd・SQLite・Python試験
-- leakfence: 保全したPython試作。[元の説明](docs/PYTHON_PROTOTYPE.md)はRust版の仕様とは異なります
+- tests: ローカルworkerdとSQLiteの試験
+- archive/python-prototype: [初期のPython試作](docs/PYTHON_PROTOTYPE.md)の保全先
 
 脆弱性の報告は[Security Policy](SECURITY.md)を参照してください。実データや認証情報をIssueへ貼らないでください。
 本番利用の判断材料と未完了の項目は[実用化の条件](docs/READINESS.md)に記載しています。

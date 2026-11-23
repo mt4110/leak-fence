@@ -15,12 +15,9 @@
     "test:zt": "npm run build:zt && node --test --test-concurrency=1 tests/zt-gateway.test.mjs",
     "validate:zt": "npm run build:zt && node scripts/zt-gateway-validation.mjs"
   },
-  "overrides": {
-    "sharp": "0.35.5"
-  },
   "devDependencies": {
-    "miniflare": "5.20261001.0-alpha",
+    "miniflare": "5.20261119.0-beta",
     "typescript": "7.0.2",
-    "wrangler": "4.147.0"
+    "wrangler": "4.166.0"
   }
 }
