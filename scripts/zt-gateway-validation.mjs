@@ -134,10 +134,12 @@ try {
   assert.ok(port, 'database must bind only loopback');
   let ready = false;
   for (let i = 0; i < 40; i++) {
-    try { await command('docker', ['exec', container, 'pg_isready', '-U', 'validation', '-d', database]); ready = true; break; }
+    try { await command('docker', ['exec', container, 'pg_isready', '-h', '127.0.0.1', '-U', 'validation', '-d', database]); ready = true; break; }
     catch { await pause(250); }
   }
   assert.ok(ready, 'isolated PostgreSQL ready');
+  const postgresVersion = await command('docker', ['exec', container, 'postgres', '--version']);
+  assert.match(postgresVersion, /^postgres \(PostgreSQL\) 17\./);
   writeFileSync(resolve(dir, 'config.json'), JSON.stringify({ DSN: `postgres://validation:${password}@127.0.0.1:${port}/${database}?sslmode=disable`,
     TransportSecret: transport, AuthorityKey: key, JWTSecret: jwtSecret, Directory: dir, SyntheticSubject: syntheticSubject }), { mode: 0o600, flag: 'wx' });
   fixture = spawn('go', ['test', './cmd/zt-control-plane', '-run', '^TestVerificationSummaryEdgeFixture$', '-count=1'], {
@@ -336,9 +338,10 @@ try {
   }
 
   const median = values => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
-  const snapshot = ['examples/zt-gateway/api.ts', 'packages/adapter/index.ts', 'examples/zt-gateway/contracts.json', 'crates/worker/build/index_bg.wasm', 'scripts/zt-gateway-validation.mjs']
+  const snapshot = ['examples/zt-gateway/api.ts', 'packages/adapter/index.ts', 'examples/zt-gateway/contracts.json', 'crates/worker/build/index_bg.wasm', 'scripts/zt-gateway-validation.mjs', 'scripts/scan-dependencies.mjs', 'docker/zt-postgres/Dockerfile']
     .map(path => ({ path, sha256: createHash('sha256').update(readFileSync(path)).digest('hex') }));
-  const report = { started_at: started, completed_at: new Date().toISOString(), environment: cloud ? 'real Cloudflare Workers + Quick Tunnel + local Go + PostgreSQL 16' : 'local Go + real PostgreSQL 16 + workerd + Rust/Wasm + SQLite DO',
+  const report = { started_at: started, completed_at: new Date().toISOString(), environment: cloud ? 'real Cloudflare Workers + Quick Tunnel + local Go + PostgreSQL 17' : 'local Go + real PostgreSQL 17 + workerd + Rust/Wasm + SQLite DO',
+    postgres_version: postgresVersion, postgres_image_id: postgresImage,
     cloud_deployed: cloud, production_data: false, client_requests: requests, cloud_http_requests: cloudRequests,
     prior_cloud_http_requests: priorCloudRequests, cumulative_cloud_http_requests: priorCloudRequests + cloudRequests,
     budget_day_utc: budgetDay, ...(previousBudgetDay ? { previous_budget_day_utc: previousBudgetDay } : {}),

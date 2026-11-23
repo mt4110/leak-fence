@@ -55,7 +55,7 @@ npm run test:zt
 npm run validate:zt -- /absolute/path/to/zt-gateway
 ```
 
-専用PostgreSQL 16をlocalhostのランダムポートへ作成する。既存DBは使用しない。
+専用PostgreSQL 17イメージをビルドしてOSV-Scannerで検査し、合格したイメージでlocalhostのランダムポートに専用DBを作成する。既存DBは使用しない。
 ZT側のopt-in fixtureが署名付きイベントを実取り込み処理へ渡し、実DBへ保存する。
 専用のGo HTTP入口へworkerdから接続し、実Wasm・SQLiteで検査する。
 試験中の故障注入はテストハーネスだけで行い、公開Workerのクエリやヘッダーからは選択できない。
