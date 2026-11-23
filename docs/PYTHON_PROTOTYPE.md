@@ -27,7 +27,10 @@ Cookie・任意のヘッダーは通さない。遮断時は内容を含まな�
 
 ## 実行
 
+以下は保全した試作の手順です。現在の製品のビルドやCIからは実行しません。
+
 ```sh
+cd archive/python-prototype
 python3 -m unittest discover -s tests -v
 ```
 
