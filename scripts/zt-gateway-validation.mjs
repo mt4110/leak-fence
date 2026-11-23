@@ -125,8 +125,10 @@ async function check(name, id, token, expected, headers = {}, method = 'GET') {
 }
 
 try {
-  await command('docker', ['run', '-d', '--name', container, '-p', '127.0.0.1::5432',
-    '-e', 'POSTGRES_DB=' + database, '-e', 'POSTGRES_USER=validation', '-e', 'POSTGRES_PASSWORD=' + password, 'postgres:16']);
+  await command(process.execPath, ['scripts/scan-dependencies.mjs', 'image']);
+  const postgresImage = readFileSync('scripts/zt-postgres-image.txt', 'utf8').trim();
+  await command('docker', ['run', '--pull=never', '-d', '--name', container, '-p', '127.0.0.1::5432',
+    '-e', 'POSTGRES_DB=' + database, '-e', 'POSTGRES_USER=validation', '-e', 'POSTGRES_PASSWORD=' + password, postgresImage]);
   containerCreated = true;
   const portLine = await command('docker', ['port', container, '5432/tcp']);
   const port = /^127\.0\.0\.1:(\d+)$/.exec(portLine)?.[1];
