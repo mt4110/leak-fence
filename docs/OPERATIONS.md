@@ -84,10 +84,12 @@ OSSを利用者のCloudflareアカウントへ配置すれば、その基盤利�
 
 Rust 1.95.0、worker/worker-build 0.8.7、Node 26.9.0を初期検証環境とする。
 Cargo.lockとpackage-lock.jsonを固定し、Dependabotによる提案は検証後に手動で取り込む。
-MiniflareはWrangler 4.147.0同梱系列5.20261001.0-alphaを使う。プレリリースの開発用依存であり、
+MiniflareはWrangler 4.166.0と同じ5.20261119.0-betaを使う。プレリリースの開発用依存であり、
 Cloudflare本番の動作保証として扱わない。
 
-Miniflareが固定するsharp 0.35.4には[GHSA-wq5f-xc86-pv6w](https://github.com/advisories/GHSA-wq5f-xc86-pv6w)があるため、
-開発依存のsharpを修正済み0.35.5へpatch overrideしている。無視設定や監査除外は使わない。
-上流が修正版を採用したらoverrideの必要性を再評価する。画像処理機能は製品に使用しない。
-開発依存も含めてnpm auditを実行する。
+この組み合わせでMiniflareはundici 7.30.2とsharp 0.35.5を使用する。
+`npm audit`では開発依存も検査する。
+
+Rust側では、Cloudflare SDKの`worker`を経由して`chrono`が残る。
+[RUSTSEC-2026-0543](https://rustsec.org/advisories/RUSTSEC-2026-0543.html)は保守終了の通知で、修正版はない。
+SDKの更新時に依存の置き換え状況を確認する。
