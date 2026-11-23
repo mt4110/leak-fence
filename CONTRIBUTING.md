@@ -9,3 +9,22 @@ READMEのローカル検証を実行し、振る舞いを変えるPRには境界
 
 コードはMITです。必要な第三者の帰属を保持してください。
 CI成功は独立セキュリティレビューや本番性能の証明ではありません。
+
+## 依存関係の検査
+
+GitHub Actions の `osv-dependencies` は、PR のマージ結果にある
+`package-lock.json`、`Cargo.lock` と、ZT 検証が使う PostgreSQL 17 イメージを毎回検査します。
+既存・新規の区別や深刻度による除外は設けず、脆弱性の検出や検査の失敗でチェックが失敗します。
+`chrono` の保守終了通知 RUSTSEC-2026-0543 は、別名 ID がない間だけログに通知します。
+同じ検査を main への push 時と毎日にも実行します。
+
+ローカルでは OSV-Scanner v2、Node.js、稼働中の Docker を用意し、このリポジトリの Git フックを有効にしてください。
+既存のフックがある場合は、そのフックから `.githooks/pre-commit` を呼び出してください。
+
+```sh
+git config --local core.hooksPath .githooks
+```
+
+フックはステージ済みのロックファイルとイメージ定義を検査します。GitHub 側の必須チェックはローカルフックの設定から独立しています。
+CI と ZT 検証は同じ Dockerfile から PostgreSQL 17 をビルドします。ZT 検証では走査を通過したイメージ ID を指定してコンテナを起動します。
+17系のベースイメージを更新するときは `docker/zt-postgres/Dockerfile` のダイジェストを更新してください。
