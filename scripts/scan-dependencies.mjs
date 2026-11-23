@@ -1,11 +1,13 @@
+import { randomUUID } from 'node:crypto';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const imageFile = 'scripts/zt-postgres-image.txt';
+const dockerfile = 'docker/zt-postgres/Dockerfile';
 const mode = process.argv[2];
 const staged = mode === '--staged';
+const prepareImage = mode === 'prepare-image';
 const temporary = mkdtempSync(join(tmpdir(), 'leak-fence-osv-'));
 
 function read(path) {
@@ -47,21 +49,35 @@ function scanSource() {
 }
 
 function scanImage() {
-  const image = read(imageFile).toString().trim();
-  if (!/^postgres:17(?:[.a-z0-9-]*)@sha256:[a-f0-9]{64}$/.test(image)) {
-    throw new Error('Expected a digest-pinned PostgreSQL 17 image');
-  }
-  execFileSync('docker', ['pull', image], { stdio: 'inherit', timeout: 180_000 });
-  execFileSync('osv-scanner', ['scan', 'image', '--all-vulns', image], {
-    stdio: 'inherit', cwd: temporary, timeout: 180_000,
+  const image = `leak-fence/zt-postgres:${randomUUID()}`;
+  const archive = join(temporary, 'postgres.tar');
+  const options = { stdio: ['ignore', 'inherit', 'inherit'], timeout: 240_000 };
+  execFileSync('docker', ['build', '--pull', '--no-cache', '--tag', image, '-'], {
+    ...options, input: read(dockerfile), stdio: ['pipe', 2, 2],
   });
+  let passed = false;
+  try {
+    const imageId = execFileSync('docker', ['image', 'inspect', '--format={{.Id}}', image], {
+      encoding: 'utf8', timeout: 30_000,
+    }).trim();
+    if (!/^sha256:[a-f0-9]{64}$/.test(imageId)) throw new Error('Missing built image ID');
+    execFileSync('docker', ['save', '--output', archive, imageId], options);
+    execFileSync('osv-scanner', ['scan', 'image', '--all-vulns', '--archive', archive], {
+      ...options, stdio: ['ignore', 2, 2], cwd: temporary,
+    });
+    passed = true;
+    if (prepareImage) console.log(imageId);
+  } finally {
+    // Keep the scanned tag only when the validation command needs to run it.
+    if (!prepareImage || !passed) execFileSync('docker', ['image', 'rm', image], options);
+  }
 }
 
 try {
   if (staged || mode === 'source') scanSource();
-  if (staged || mode === 'image') scanImage();
-  if (!staged && mode !== 'source' && mode !== 'image') {
-    throw new Error('Usage: node scripts/scan-dependencies.mjs source|image|--staged');
+  if (staged || prepareImage || mode === 'image') scanImage();
+  if (!staged && !prepareImage && mode !== 'source' && mode !== 'image') {
+    throw new Error('Usage: node scripts/scan-dependencies.mjs source|image|prepare-image|--staged');
   }
 } finally {
   rmSync(temporary, { recursive: true, force: true });

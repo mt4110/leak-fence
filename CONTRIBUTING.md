@@ -26,5 +26,5 @@ git config --local core.hooksPath .githooks
 ```
 
 フックはステージ済みのロックファイルとイメージ定義を検査します。GitHub 側の必須チェックはローカルフックの設定から独立しています。
-PostgreSQL は同じダイジェストを CI と ZT 検証で参照し、ZT 検証では走査を通過してからコンテナを起動します。
-17系の修正版を取り込むときは `scripts/zt-postgres-image.txt` のダイジェストを更新してください。
+CI と ZT 検証は同じ Dockerfile から PostgreSQL 17 をビルドします。ZT 検証では走査を通過したイメージ ID を指定してコンテナを起動します。
+17系のベースイメージを更新するときは `docker/zt-postgres/Dockerfile` のダイジェストを更新してください。
